@@ -1,7 +1,7 @@
 import pandas as pd
 from sqlalchemy import create_engine
 
-DB_CONNECTION = ''
+DB_CONNECTION = 'postgresql://postgres:admin@localhost:5432/SmartEnergy'
 FILE_ENERGY = 'data/loureiro_energy.csv'
 FILE_WEATHER = 'data/weather_aveiro_final.csv'
 
