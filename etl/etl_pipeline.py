@@ -33,8 +33,8 @@ def executar_etl():
         print(f"ERRO: Arquivo {FILE_WEATHER} não encontrado. Verifique se a pasta 'data' existe.")
         return
 
-    df_weather['time'] = pd.to_datetime(df_weather['time'])
-    df_weather.set_index('time', inplace=True)
+    df_weather['Time'] = pd.to_datetime(df_weather['Time'])
+    df_weather.set_index('Time', inplace=True)
 
     # Selecionar colunas úteis
     cols_weather = ['Avg_Temp', 'Total_Global_Rad', 'Avg_Rel_Humidity']
