@@ -1,9 +1,11 @@
 import pandas as pd
 from sqlalchemy import create_engine
+import os
 
-DB_CONNECTION = 'postgresql://postgres:admin@localhost:5432/SmartEnergy'
-FILE_ENERGY = 'data/loureiro_energy.csv'
-FILE_WEATHER = 'data/weather_aveiro_final.csv'
+DB_CONNECTION = 'postgresql://postgres:admin@localhost:5432/smartenergy'
+DIRETORIO_ATUAL = os.path.dirname(os.path.abspath(__file__))
+FILE_ENERGY = os.path.join(DIRETORIO_ATUAL, 'data', 'loureiro_energy.csv')
+FILE_WEATHER = os.path.join(DIRETORIO_ATUAL, 'data', 'weather_aveiro_final.csv')
 
 def executar_etl():
     # 1. Carregar dados de Energia
@@ -11,7 +13,7 @@ def executar_etl():
     try:
         df_energy = pd.read_csv(FILE_ENERGY)
     except FileNotFoundError:
-        print(f"ERRO: Arquivo {FILE_ENERGY} não encontrado. Verifique se a pasta 'data' existe.")
+        print(f"ERRO: Arquivo {FILE_ENERGY} nao encontrado.")
         return
 
     df_energy['Time'] = pd.to_datetime(df_energy['Time'])
@@ -26,7 +28,7 @@ def executar_etl():
     df_final_energy = df_energy[['total_active_power_kw']].copy()
 
     # 2. Carregar dados climáticos
-    print("-> Lendo dados climáticos (Aveiro)... ")
+    print("-> Lendo dados climaticos (Aveiro)... ")
     try:
         df_weather = pd.read_csv(FILE_WEATHER)
     except FileNotFoundError:
@@ -43,7 +45,7 @@ def executar_etl():
     df_weather_clean = df_weather[cols_existentes].copy()
 
     # 3. Combinar dados de Energia e Clima (Merge)
-    print("-> Combinando dados de consumo e climáticos... ")
+    print("-> Combinando dados de consumo e climaticos... ")
     df_merged = df_final_energy.join(df_weather_clean, how='inner')
 
     df_merged.reset_index(inplace=True)
