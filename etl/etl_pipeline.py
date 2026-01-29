@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-
 import pandas as pd
 from sqlalchemy import create_engine
+import os
 
-DB_CONNECTION = 'postgresql://postgres:admin@localhost:5432/SmartEnergy'
-FILE_ENERGY = 'data/loureiro_energy.csv'
-FILE_WEATHER = 'data/weather_aveiro_final.csv'
+DB_CONNECTION = 'postgresql://postgres:admin@localhost:5432/smartenergy'
+DIRETORIO_ATUAL = os.path.dirname(os.path.abspath(__file__))
+FILE_ENERGY = os.path.join(DIRETORIO_ATUAL, 'data', 'loureiro_energy.csv')
+FILE_WEATHER = os.path.join(DIRETORIO_ATUAL, 'data', 'weather_aveiro_final.csv')
 
 def executar_etl():
     # 1. Carregar dados de Energia
@@ -12,7 +13,7 @@ def executar_etl():
     try:
         df_energy = pd.read_csv(FILE_ENERGY)
     except FileNotFoundError:
-        print(f"ERRO: Arquivo {FILE_ENERGY} não encontrado. Verifique se a pasta 'data' existe.")
+        print(f"ERRO: Arquivo {FILE_ENERGY} nao encontrado.")
         return
 
     df_energy['Time'] = pd.to_datetime(df_energy['Time'])
