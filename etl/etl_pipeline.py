@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pandas as pd
 from sqlalchemy import create_engine
 
@@ -26,7 +27,7 @@ def executar_etl():
     df_final_energy = df_energy[['total_active_power_kw']].copy()
 
     # 2. Carregar dados climáticos
-    print("-> Lendo dados climáticos (Aveiro)... ")
+    print("-> Lendo dados climaticos (Aveiro)... ")
     try:
         df_weather = pd.read_csv(FILE_WEATHER)
     except FileNotFoundError:
@@ -43,7 +44,7 @@ def executar_etl():
     df_weather_clean = df_weather[cols_existentes].copy()
 
     # 3. Combinar dados de Energia e Clima (Merge)
-    print("-> Combinando dados de consumo e climáticos... ")
+    print("-> Combinando dados de consumo e climaticos... ")
     df_merged = df_final_energy.join(df_weather_clean, how='inner')
 
     df_merged.reset_index(inplace=True)
