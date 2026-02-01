@@ -43,7 +43,7 @@ public class HotelReadingService {
             throw new InvalidDateRangeException("Data de início não pode ser posterior à data de fim.");
         }
 
-        // 2. Busca os dados brutos no banco (Entity)
+        // 2. Busca os dados brutos no banco por ordem (Entity)
         List<HotelReading> readings = hotelReadingRepository
                 .findByTimestampBetweenOrderByTimestampAsc(init, end);
 
