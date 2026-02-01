@@ -1,6 +1,7 @@
 package com.smartenergy.smart_energy_api.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -28,5 +29,16 @@ import com.smartenergy.smart_energy_api.model.HotelReading;
  */
 @Repository
 public interface HotelReadingRepository extends JpaRepository<HotelReading, LocalDateTime> { 
-    // Nenhuma implementação necessária. O Spring cria o SQL automaticamente.
+    /**
+     * Busca todas as leituras dentro de um intervalo de tempo específico.
+     * <p>
+     * O Spring cria automaticamente o SQL: 
+     * <code>SELECT * FROM hotel_readings WHERE timestamp BETWEEN ? AND ?</code>
+     * </p>
+     * * @param start Data/Hora inicial
+     * @param end Data/Hora final
+     * @return Lista de leituras no período
+     */
+
+    List<HotelReading> findByTimestampBetween(LocalDateTime start, LocalDateTime end);
 }
