@@ -1,7 +1,7 @@
 package com.smartenergy.smart_energy_api.dto;
 
 import java.time.LocalDateTime;
-
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,9 +15,13 @@ Contém a data e hora para a qual se deseja verificar se está no horário de ta
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TarifaResquestDTO {
+public class TarifaRequestDTO {
     
-    // O usuário vai enviar um JSON assim: { "dataHora": "2025-10-20T19:00:00" }
+    /**
+     * A data e hora a ser verificada.
+     * Exemplo JSON: "2025-10-20T19:00:00"
+     */
+    @NotNull(message = "O campo dataHora é obrigatório.")
     private LocalDateTime dataHora;
 
 }
