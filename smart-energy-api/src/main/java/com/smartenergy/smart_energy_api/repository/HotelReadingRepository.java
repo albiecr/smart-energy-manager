@@ -40,5 +40,7 @@ public interface HotelReadingRepository extends JpaRepository<HotelReading, Loca
      * @return Lista de leituras no período
      */
 
+    List<HotelReading> findByTimestampBetweenOrderByTimestampAsc(LocalDateTime start, LocalDateTime end);
+
     List<HotelReading> findByTimestampBetween(LocalDateTime start, LocalDateTime end);
 }

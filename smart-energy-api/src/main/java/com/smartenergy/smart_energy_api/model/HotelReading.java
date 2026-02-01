@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -36,7 +38,10 @@ public class HotelReading {
      * </p>
      */
     @Id
-    @Column(name ="timestamp")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // O banco gera o número sozinho (1, 2, 3...)
+    private Long id;
+
+    @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
 
     /**
