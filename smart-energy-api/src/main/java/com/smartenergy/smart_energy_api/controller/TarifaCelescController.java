@@ -1,5 +1,6 @@
 package com.smartenergy.smart_energy_api.controller;
 
+import com.smartenergy.smart_energy_api.dto.HotelReadingDTO;
 import com.smartenergy.smart_energy_api.dto.TarifaRequestDTO;
 import com.smartenergy.smart_energy_api.dto.TarifaResponseDTO;
 import com.smartenergy.smart_energy_api.service.TarifaCelescService;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Controlador REST responsável por expor os serviços relacionados às tarifas de energia.
@@ -48,6 +51,24 @@ public class TarifaCelescController {
     public ResponseEntity<TarifaResponseDTO> verificarHorario(@RequestBody TarifaRequestDTO request) {
         TarifaResponseDTO resposta = tarifaService.verificarHorario(request);
         return ResponseEntity.ok(resposta);
+    }
+
+    /**
+     * Endpoint para calcular o custo total de uma lista de leituras de energia.
+     * <p>
+     * Recebe uma lista de leituras (com demanda e data/hora), aplica a regra de tarifação
+     * (Ponta ou Fora Ponta) para cada uma e retorna o valor total da fatura em Reais.
+     * </p>
+     *
+     * @param leituras Lista de objetos {@link HotelReadingDTO} no corpo da requisição (JSON).
+     * @return O valor total acumulado (R$) formatado como Double.
+     * <br>
+     * Exemplo: <code>POST /api/tarifas/calcular</code>
+     */
+    @PostMapping("tarifas/calculate")
+    public ResponseEntity<Double> calcularCustoTotal(@RequestBody List<HotelReadingDTO> leituras) {
+        Double custoTotal = tarifaService.calcularCustoTotal(leituras);
+        return ResponseEntity.ok(custoTotal);
     }
 
 }
