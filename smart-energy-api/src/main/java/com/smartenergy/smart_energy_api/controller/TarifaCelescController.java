@@ -47,7 +47,7 @@ public class TarifaCelescController {
      * Exemplo de chamada: <code>POST /api/tarifas/verificar</code>
      */
 
-    @PostMapping("tarifas/verify")
+    @PostMapping("/verify")
     public ResponseEntity<TarifaResponseDTO> verificarHorario(@RequestBody TarifaRequestDTO request) {
         TarifaResponseDTO resposta = tarifaService.verificarHorario(request);
         return ResponseEntity.ok(resposta);
@@ -65,7 +65,7 @@ public class TarifaCelescController {
      * <br>
      * Exemplo: <code>POST /api/tarifas/calcular</code>
      */
-    @PostMapping("tarifas/calculate")
+    @PostMapping("/calculate")
     public ResponseEntity<Double> calcularCustoTotal(@RequestBody List<HotelReadingDTO> leituras) {
         Double custoTotal = tarifaService.calcularCustoTotal(leituras);
         return ResponseEntity.ok(custoTotal);
