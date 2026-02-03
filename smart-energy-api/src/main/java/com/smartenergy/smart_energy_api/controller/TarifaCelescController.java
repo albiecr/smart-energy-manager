@@ -1,5 +1,6 @@
 package com.smartenergy.smart_energy_api.controller;
 
+import com.smartenergy.smart_energy_api.dto.CustoResponseDTO;
 import com.smartenergy.smart_energy_api.dto.HotelReadingDTO;
 import com.smartenergy.smart_energy_api.dto.TarifaRequestDTO;
 import com.smartenergy.smart_energy_api.dto.TarifaResponseDTO;
@@ -38,7 +39,7 @@ public class TarifaCelescController {
     /**
      * Endpoint para verificar se uma data e hora específica corresponde ao Horário de Ponta.
      * <p>
-     * Recebe um JSON contendo a data/hora e retorna um booleano junto com uma mensagem descritiva.
+     * Recebe um JSON contendo a data/hora e retorna um booleano com uma mensagem descritiva.
      * </p>
      *
      * @param request DTO contendo a data e hora a ser analisada (JSON no corpo da requisição).
@@ -66,9 +67,18 @@ public class TarifaCelescController {
      * Exemplo: <code>POST /api/tarifas/calcular</code>
      */
     @PostMapping("/calculate")
-    public ResponseEntity<Double> calcularCustoTotal(@RequestBody List<HotelReadingDTO> leituras) {
+    public ResponseEntity<CustoResponseDTO> calcularCustoTotal(@RequestBody List<HotelReadingDTO> leituras) {
+
+        // 1. Faz o cálculo matemático (Service)
         Double custoTotal = tarifaService.calcularCustoTotal(leituras);
-        return ResponseEntity.ok(custoTotal);
+
+        // 2. Cria uma mensagem bonitinha
+        String mensagem = String.format("O custo total para %d leituras é de R$ %.2f", leituras.size(), custoTotal);
+
+        // 3. Embrulha tudo no DTO e envia
+        CustoResponseDTO resposta = new CustoResponseDTO(custoTotal, mensagem);
+
+        return ResponseEntity.ok(resposta);
     }
 
 }
