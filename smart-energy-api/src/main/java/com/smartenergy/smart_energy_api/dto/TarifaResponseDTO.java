@@ -3,6 +3,7 @@ package com.smartenergy.smart_energy_api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
  * </p>
  */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TarifaResponseDTO {

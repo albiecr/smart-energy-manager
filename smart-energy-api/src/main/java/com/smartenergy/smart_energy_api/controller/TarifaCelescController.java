@@ -6,10 +6,7 @@ import com.smartenergy.smart_energy_api.dto.TarifaRequestDTO;
 import com.smartenergy.smart_energy_api.dto.TarifaResponseDTO;
 import com.smartenergy.smart_energy_api.service.TarifaCelescService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -81,4 +78,22 @@ public class TarifaCelescController {
         return ResponseEntity.ok(resposta);
     }
 
+    /**
+     * Endpoint para calcular a fatura de um mês específico usando dados reais do banco.
+     * <br>
+     * Exemplo: <code>GET /api/tarifas/custo-mensal?ano=2022&mes=5</code>
+     *
+     * @param ano O ano da fatura (ex: 2022)
+     * @param mes O mês da fatura (ex: 5 para Maio)
+     * @return O valor total calculado com base nas leituras do banco.
+     */
+    @GetMapping("/monthly-cost")
+    public ResponseEntity<CustoResponseDTO> calcularCustoMensal(
+            @RequestParam int ano,
+            @RequestParam int mes
+    ) {
+        // Chama o metodo novo do Service que busca no banco
+        CustoResponseDTO reposta = tarifaService.calcularCustoDoBanco(ano, mes);
+        return ResponseEntity.ok(reposta);
+    }
 }
