@@ -28,7 +28,7 @@ import com.smartenergy.smart_energy_api.model.HotelReading;
  * @see HotelReading
  */
 @Repository
-public interface HotelReadingRepository extends JpaRepository<HotelReading, LocalDateTime> { 
+public interface HotelReadingRepository extends JpaRepository<HotelReading, Long> {
     /**
      * Busca todas as leituras dentro de um intervalo de tempo específico.
      * <p>

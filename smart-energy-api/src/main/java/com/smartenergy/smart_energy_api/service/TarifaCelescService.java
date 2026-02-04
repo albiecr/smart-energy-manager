@@ -1,11 +1,19 @@
 package com.smartenergy.smart_energy_api.service;
 
+import com.smartenergy.smart_energy_api.dto.CustoResponseDTO;
 import com.smartenergy.smart_energy_api.dto.HotelReadingDTO;
 import com.smartenergy.smart_energy_api.dto.TarifaRequestDTO;
 import com.smartenergy.smart_energy_api.dto.TarifaResponseDTO;
+import com.smartenergy.smart_energy_api.model.HotelReading;
+import com.smartenergy.smart_energy_api.repository.HotelReadingRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +25,21 @@ import java.util.List;
  */
 @Service
 public class TarifaCelescService {
+
+    /**
+     * Repositório de acesso às leituras do hotel.
+     */
+
+    private final HotelReadingRepository repository;
+
+    /**
+     * Construtor para injeção de dependência do repositório.
+     *
+     * @param repository Instância do repositório gerenciada pelo Spring.
+     */
+    public TarifaCelescService(HotelReadingRepository repository) {
+        this.repository = repository;
+    }
 
     /**
      * Preço do kWh em horário de ponta (R$).
@@ -96,6 +119,53 @@ public class TarifaCelescService {
         }
 
         return custoTotal;
+    }
+
+    /**
+     * Calcula o custo total de energia para um determinado mês e ano, baseado nas leituras armazenadas no banco de dados.
+     * <p>
+     * Este metodo recupera todas as leituras do período especificado, converte-as para DTOs
+     * e reutiliza a lógica de cálculo existente para determinar o custo total.
+     * </p>
+     *
+     * @param ano O ano para o qual o custo deve ser calculado (ex: 2024).
+     * @param mes O mês para o qual o custo deve ser calculado (1-12).
+     * @return {@link CustoResponseDTO} contendo o custo total calculado e uma mensagem descritiva.
+     */
+    public CustoResponseDTO calcularCustoDoBanco(int ano, int mes) {
+
+        //1. Descobre o início e fim do mês
+        YearMonth anoMes = YearMonth.of(ano, mes);
+        LocalDateTime inicio = anoMes.atDay(1).atStartOfDay(); //Dia 01 às 00:00
+        LocalDateTime fim = anoMes.atEndOfMonth().atTime(23,59,59); //Último dia às 23:59:59
+
+        //2. Pega as leituras do banco
+        List<HotelReading> leiturasDoBanco = repository.findByTimestampBetween(inicio, fim);
+
+        //3. Converte ENTIDADE (Banco) para DTO (Cálculo)
+        // Necessário porque o metodo de cálculo usa DTOs
+        List<HotelReadingDTO> listaParaCalculo = new ArrayList<>();
+        for(HotelReading leitura : leiturasDoBanco) {
+            HotelReadingDTO dto = HotelReadingDTO.builder()
+                    .demandKw(leitura.getDemandKw())
+                    .timestamp(leitura.getTimestamp())
+                    .build();
+
+            listaParaCalculo.add(dto);
+        }
+
+        //4. Reusa a lógica de cálculo que já existe
+        Double valorBruto = calcularCustoTotal(listaParaCalculo);
+
+        //5. Converte para BigDecimal, corta em 2 casas decimais e arredonda para cima
+        Double valorArredondado = BigDecimal.valueOf(valorBruto)
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
+
+        //5. Monta a resposta bonitinha
+        String mensagem = String.format("Fatura de %02d/%d calculada com base em %d leituras.", mes,ano, leiturasDoBanco.size());
+
+        return new CustoResponseDTO(valorArredondado, mensagem);
     }
 
     // --- METODO PRIVADO (A regra interna) ---

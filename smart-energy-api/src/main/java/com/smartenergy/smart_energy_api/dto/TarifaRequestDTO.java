@@ -3,6 +3,7 @@ package com.smartenergy.smart_energy_api.dto;
 import java.time.LocalDateTime;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ Contém a data e hora para a qual se deseja verificar se está no horário de ta
 </p>
 */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TarifaRequestDTO {
